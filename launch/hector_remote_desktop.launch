@@ -1,5 +1,7 @@
+<?xml version="1.0"?>
+
 <launch>
-  <master auto="start"/>
+  <!-- <master auto="start"/> -->
   <arg name="scan_topic" default="/scan"/>
   <arg name="odom_topic" default="/odom"/>
 

@@ -1,7 +1,10 @@
+<?xml version="1.0"?>
+
 <launch>
   <node pkg="raspimouse_navigation" name="enable_motors" type="enable_motors.py" required="true"/>
   <node pkg="pimouse_slam" name="motors" type="motors.py" required="true"/>
-  <node pkg="urg_node" name="urg_node" type="urg_node" required="true">
-    <param name="frame_id" value="base_link"/>
+  <node pkg="urg_node" type="urg_node" name="urg_node">
+    <param name="frame_id" value="base_frame"/>
+    <param name="ip_address" value="192.168.0.11"/>
   </node>
 </launch>
