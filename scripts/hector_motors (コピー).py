@@ -102,12 +102,12 @@ class Motor():
         self.th += self.vth * dt
 
         q = tf.transformations.quaternion_from_euler(0, 0, self.th)
-        self.bc_odom.sendTransform((self.x, self.y, 0.0), q, self.cur_time, "base_link", "odom")
+        self.bc_odom.sendTransform((self.x,self.y,0.0), q, self.cur_time,"base_frame","odom")
 
         odom = Odometry()
         odom.header.stamp = self.cur_time
         odom.header.frame_id = "odom"
-        odom.child_frame_id = "base_link"
+        odom.child_frame_id = "base_frame"
 
         odom.pose.pose.position = Point(self.x,self.y,0)
         odom.pose.pose.orientation = Quaternion(*q)
