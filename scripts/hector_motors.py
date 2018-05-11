@@ -1,5 +1,8 @@
 #!/usr/bin/env python
+<<<<<<< HEAD
 #encoding: utf8
+=======
+>>>>>>> origin/master
 import sys, rospy, math, tf
 from pimouse_ros.msg import MotorFreqs
 from geometry_msgs.msg import Twist, Quaternion, TransformStamped, Point
@@ -25,11 +28,15 @@ class Motor():
 
         self.x, self.y, self.th = 0.0, 0.0, 0.0
         self.vx, self.vth = 0.0, 0.0
-
+        
         self.cur_time = rospy.Time.now()
         self.last_time = self.cur_time
 
+<<<<<<< HEAD
     def onoff_response(self,onoff):
+=======
+    def onoff_response(self, onoff):
+>>>>>>> origin/master
         d = TriggerResponse()
         d.success = self.set_power(onoff)
         d.message = "ON" if self.is_on else "OFF"
@@ -38,7 +45,7 @@ class Motor():
     def set_power(self, onoff = False):
         en = "/dev/rtmotoren0"
         try:
-            with open(en,'w') as f:
+            with open(en, 'w') as f:
                 f.write("1\n" if onoff else "0\n")
             self.is_on = onoff
             return True
@@ -47,22 +54,22 @@ class Motor():
 
         return False
 
-    def set_raw_freq(self,left_hz,right_hz):
+    def set_raw_freq(self, left_hz, right_hz):
         if not self.is_on:
             rospy.logerr("not enpowered")
             return
 
         try:
-            with open("/dev/rtmotor_raw_l0",'w') as lf, open("/dev/rtmotor_raw_r0",'w') as rf:
+            with open("/dev/rtmotor_raw_l0", 'w') as lf, open("/dev/rtmotor_raw_r0", 'w') as rf:
                 lf.write(str(int(round(left_hz))) + "\n")
                 rf.write(str(int(round(right_hz))) + "\n")
         except:
             rospy.logerr("cannot write to rtmotor_raw_*")
 
-    def callback_raw_freq(self,message):
-        self.set_raw_freq(message.left_hz,message.right_hz)
-
-    def callback_cmd_vel(self,message):
+    def callback_raw_freq(self, message):
+        self.set_raw_freq(message.left_hz, message.right_hz)
+    
+    def callback_cmd_vel(self, message):
         if not self.is_on:
             return
         self.vx = message.linear.x
@@ -70,14 +77,21 @@ class Motor():
 
         forward_hz = 80000.0*message.linear.x/(9*math.pi)
         rot_hz = 400.0*message.angular.z/math.pi
-        self.set_raw_freq(forward_hz-rot_hz, forward_hz+rot_hz)
+        self.set_raw_freq(forward_hz-rot_hz, forward_hz + rot_hz)
         #self.using_cmd_vel = True
         #self.last_time = rospy.Time.now()
 
+<<<<<<< HEAD
     def callback_on(self,message): return self.onoff_response(True)
     def callback_off(self,message): return self.onoff_response(False)
 
     def callback_tm(self,message):
+=======
+    def callback_on(self, message): return self.onoff_response(True)
+    def callback_off(self, message): return self.onoff_response(False)
+
+    def callback_tm(self, message):
+>>>>>>> origin/master
         if not self.is_on:
             rospy.logerr("not enpowered")
             return False
@@ -102,14 +116,24 @@ class Motor():
         self.th += self.vth * dt
 
         q = tf.transformations.quaternion_from_euler(0, 0, self.th)
+<<<<<<< HEAD
         self.bc_odom.sendTransform((self.x, self.y, 0.0), q, self.cur_time, "base_link", "odom")
+=======
+        self.bc_odom.sendTransform((self.x, self.y, 0.0), q, self.cur_time, "base_frame", "odom")
+>>>>>>> origin/master
 
         odom = Odometry()
         odom.header.stamp = self.cur_time
         odom.header.frame_id = "odom"
+<<<<<<< HEAD
         odom.child_frame_id = "base_link"
 
         odom.pose.pose.position = Point(self.x,self.y,0)
+=======
+        odom.child_frame_id = "base_frame"
+
+        odom.pose.pose.position = Point(self.x, self.y, 0)
+>>>>>>> origin/master
         odom.pose.pose.orientation = Quaternion(*q)
 
         odom.twist.twist.linear.x = self.vx
