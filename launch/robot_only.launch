@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+  <node pkg="raspimouse_navigation" name="enable_motors" type="enable_motors.py" required="true"/>
+  <node pkg="pimouse_slam" name="motors" type="motors.py" required="true"/>
+  <node pkg="urg_node" type="urg_node" name="urg_node">
+    <param name="frame_id" value="base_frame"/>
+    <param name="ip_address" value="192.168.0.11"/>
+  </node>
+
+  <!-- Run Map Server -->
+  <arg name="map_file" default="$(find raspimouse_navigation)/map/map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" output="screen"/>
+
+  <!-- Run Move Base -->
+  <include file="$(find raspimouse_navigation)/launch/run_move_base.launch"/>
+
+  <!-- Run Amcl -->
+  <include file="$(find raspimouse_navigation)/launch/run_amcl.launch"/>
+
+</launch>
